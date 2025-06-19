@@ -297,8 +297,14 @@ setup_ohmyzsh() {
     exit 1
   fi
 
+  if [ -z "${ostype%CYGWIN*}" ] && git --version | grep -Eq '[Ww]indows'; then
+    CLONE_PATH=$(cygpath -m "$ZSH")
+  else
+    CLONE_PATH=$ZSH
+  fi
+
   # Manual clone with git config options to support git < v1.7.2
-  git init --quiet "$ZSH" && cd "$ZSH" \
+  git init --quiet "$CLONE_PATH" && cd "$ZSH" \
   && git config core.eol lf \
   && git config core.autocrlf false \
   && git config fsck.zeroPaddedFilemode ignore \
